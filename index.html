@@ -96,7 +96,10 @@
         const CarIcon = (props) => <IconBase {...props}><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle></IconBase>;
         const ArrowDown = (props) => <IconBase {...props}><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></IconBase>;
         const PhoneIcon = (props) => <IconBase {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></IconBase>;
-        
+        // 新增筆記 Icon
+        const EditIcon = (props) => <IconBase {...props}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></IconBase>;
+        const SaveIcon = (props) => <IconBase {...props}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></IconBase>;
+
         const CutePlaneIcon = (props) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={props.size || 20} height={props.size || 20} viewBox="0 0 24 24" fill="currentColor" stroke="none" className={props.className} {...props}>
                 <path d="M21,16v-2l-8-5V3.5c0-0.83-0.67-1.5-1.5-1.5S10,2.67,10,3.5V9l-8,5v2l8-2.5V19l-2,1.5V22l3.5-1l3.5,1v-1.5L13,19v-5.5L21,16z"></path>
@@ -414,6 +417,48 @@
             </div>
         );
 
+        // --- 新增：筆記彈窗組件 ---
+        const NoteModal = ({ onClose, dayKey, dayLabel, currentNote, onSave }) => {
+            const [text, setText] = useState(currentNote || '');
+
+            return (
+                <div className="fixed inset-0 bg-stone-900/70 z-50 flex items-center justify-center p-4 animate-fadeIn backdrop-blur-sm" onClick={onClose}>
+                    <div className="bg-[#f9f7f2] w-full max-w-sm rounded-xl p-6 shadow-2xl animate-slideUp border border-[#d6d3c9]" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center mb-4 pb-2 border-b border-[#b45309]/30">
+                            <h3 className="text-xl font-bold text-stone-800 font-serif-tc flex items-center">
+                                <EditIcon size={20} className="mr-2 text-[#b45309]" />
+                                {dayLabel} · 隨手筆記
+                            </h3>
+                            <button onClick={onClose} className="p-1 hover:bg-stone-200 rounded-full transition-colors"><XIcon size={20} className="text-stone-500" /></button>
+                        </div>
+                        
+                        <div className="mb-4">
+                            <textarea
+                                className="w-full h-48 p-4 bg-white border border-stone-300 rounded-lg text-stone-700 font-serif-tc text-base focus:outline-none focus:border-[#b45309] focus:ring-1 focus:ring-[#b45309] resize-none leading-relaxed"
+                                placeholder="寫下今日的心情、花費記錄、或是想對旅伴說的話..."
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                autoFocus
+                            ></textarea>
+                            <div className="text-xs text-stone-400 mt-2 text-right">
+                                * 筆記將儲存於您的本機裝置
+                            </div>
+                        </div>
+
+                        <div className="flex space-x-3">
+                            <button onClick={onClose} className="flex-1 py-3 bg-stone-100 text-stone-600 rounded-lg font-medium font-serif-tc hover:bg-stone-200 transition-colors border border-stone-200">
+                                取消
+                            </button>
+                            <button onClick={() => { onSave(dayKey, text); onClose(); }} className="flex-1 py-3 bg-[#b45309] text-white rounded-lg font-bold font-serif-tc hover:bg-[#92400e] transition-colors shadow-sm flex items-center justify-center">
+                                <SaveIcon size={18} className="mr-2" />
+                                儲存筆記
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
         const ChongqingTripApp = () => {
             const [activeTab, setActiveTab] = useState('day1');
             const [view, setView] = useState('itinerary'); 
@@ -421,6 +466,29 @@
             const [flightModalInfo, setFlightModalInfo] = useState(null); 
             const [showExchangeModal, setShowExchangeModal] = useState(false);
             const [showHotelModal, setShowHotelModal] = useState(false);
+            
+            // --- 筆記相關狀態 ---
+            const [notes, setNotes] = useState({});
+            const [showNoteModal, setShowNoteModal] = useState(false);
+
+            // 初始化時讀取 LocalStorage
+            useEffect(() => {
+                const savedNotes = localStorage.getItem('chongqing_trip_notes');
+                if (savedNotes) {
+                    try {
+                        setNotes(JSON.parse(savedNotes));
+                    } catch (e) {
+                        console.error("Failed to parse notes", e);
+                    }
+                }
+            }, []);
+
+            // 儲存筆記
+            const handleSaveNote = (dayKey, text) => {
+                const newNotes = { ...notes, [dayKey]: text };
+                setNotes(newNotes);
+                localStorage.setItem('chongqing_trip_notes', JSON.stringify(newNotes));
+            };
 
             const tripInfo = {
                 title: "重慶魔幻山城之旅",
@@ -611,87 +679,68 @@
                 },
                 day4: {
                     date: "3/06 (五)",
-                    title: "南岸舊夢",
-                    subtitle: "南山老街 & 三毛故居",
-                    highlight: "老君洞、下浩里、南濱路夜景",
+                    title: "網紅打卡",
+                    subtitle: "穿樓輕軌 & 南濱夜景",
+                    highlight: "李子壩、下浩里、紅九格火鍋",
                     events: [
-                        { 
-                            time: "07:30", 
-                            title: "汪家堡早市", 
-                            desc: "📜 本地人的菜籃子。🥢 推薦嘗試：【糯米團】(裡面包油條和糖粉) 或是【豌雜麵】(要求「提黃」=麵條硬一點)。", 
-                            type: "activity", 
-                            emoji: "🥬", 
+                        {
+                            time: "07:30",
+                            title: "汪家堡早市",
+                            desc: "📜 建議 07:00 抵達。最接地氣的本地菜市場，體驗重慶人的早晨。🥢 這裡有各種火鍋料、土雞、臘肉、新鮮水果，充滿煙火氣。",
+                            type: "activity",
+                            emoji: "🥬",
                             location: "重慶汪家堡",
-                            opening: "約 06:00 - 12:00",
-                            travelToNext: { dist: "12公里", time: "30分" }
+                            opening: "05:00 - 12:00",
+                            travelToNext: { dist: "10公里", time: "25分" }
                         },
-                        { 
-                            time: "11:30", 
-                            title: "前往南山", 
-                            desc: "南山被稱為重慶的「後花園」，空氣清新。", 
-                            type: "transport", 
-                            emoji: "🚡", 
-                            location: "重慶南山",
-                            travelToNext: { dist: "2公里", time: "8分" }
-                        },
-                        { 
-                            time: "13:00", 
-                            title: "黃桷埡老街", 
-                            desc: "📜 曾是茶馬古道的必經之路。這裡保存了許多巴渝古建築，沒有市區的喧囂。", 
-                            type: "activity", 
-                            emoji: "🏚️", 
-                            location: "重慶黃桷埡老街",
+                        {
+                            time: "上午",
+                            title: "鵝嶺二廠",
+                            desc: "📜 電影《從你的全世界路過》取景地。前身是印製二廠，現在是工業風濃厚的文創園區，非常適合文青拍照。",
+                            type: "activity",
+                            emoji: "🏭",
+                            location: "重慶鵝嶺二廠文創公園",
                             opening: "全天開放",
-                            travelToNext: { dist: "0.5公里", time: "3分" }
+                            travelToNext: { dist: "2公里", time: "5分" }
                         },
-                        { 
-                            time: "14:00", 
-                            title: "三毛故居", 
-                            desc: "📜 台灣作家三毛(陳平)抗戰時期曾在此居住。她在《鬧學記》中回憶過這裡的時光。屋內保留了她童年盪過的鞦韆，是文青朝聖地。", 
-                            type: "activity", 
-                            emoji: "📚", 
-                            location: "重慶三毛故居",
-                            opening: "09:00 - 17:00 (週一閉館)",
-                            travelToNext: { dist: "3公里", time: "10分" }
+                        {
+                            time: "中午",
+                            title: "李子壩穿樓",
+                            desc: "📜 重慶最著名的名片之一。親眼見證輕軌2號線穿過居民樓的奇觀。📸 最佳拍攝點在樓下的觀景平台。",
+                            type: "camera",
+                            emoji: "🚈",
+                            location: "重慶李子壩輕軌站",
+                            opening: "全天開放",
+                            travelToNext: { dist: "8公里", time: "20分" }
                         },
-                        { 
-                            time: "15:00", 
-                            title: "老君洞", 
-                            desc: "📜 千年道觀，據說求財特別靈驗。這裡也是俯瞰重慶全景的絕佳（且免費）機位。建築依山鑿洞而建，非常有特色。", 
-                            type: "activity", 
-                            emoji: "🕍", 
-                            location: "重慶老君洞道觀",
-                            opening: "08:00 - 17:00",
-                            travelToNext: { dist: "2公里", time: "8分" }
+                        {
+                            time: "下午",
+                            title: "下浩里老街",
+                            desc: "📜 靠近南山山腰，被稱為「重慶最後的老街」之一。保留了許多舊時光痕跡，視野開闊，可以拍到老街與現代建築同框的畫面。停留約30分鐘。",
+                            type: "activity",
+                            emoji: "🧱",
+                            location: "重慶下浩里",
+                            opening: "全天開放",
+                            travelToNext: { dist: "1公里", time: "5分" }
                         },
-                        { 
-                            time: "下午茶", 
-                            title: "南山·烤茶", 
-                            desc: "🥢 在「一棵樹」觀景台附近找家茶館，體驗「圍爐煮茶」。烤橘子、花生、紅棗，配上重慶特有的沱茶，享受慢生活。", 
-                            type: "food", 
-                            emoji: "🍵", 
-                            location: "重慶南山一棵樹",
-                            opening: "10:00 - 22:00",
-                            travelToNext: { dist: "6公里", time: "15分" }
-                        },
-                        { 
-                            time: "傍晚", 
-                            title: "下浩里 & 龍門浩", 
-                            desc: "📜 重慶開埠時期的洋行與使館區，中西合璧建築。這裡見證了重慶作為「戰時陪都」的歷史。晚上龍門浩燈火通明，氣氛極佳。", 
-                            type: "activity", 
-                            emoji: "🌆", 
+                        {
+                            time: "晚上",
+                            title: "龍門浩老街",
+                            desc: "📜 重慶開埠歷史的見證地，中西合璧的建築群。夜晚點燈後氣氛極佳，有很多精緻的咖啡廳與酒吧。停留約1小時。",
+                            type: "activity",
+                            emoji: "🏮",
                             location: "重慶龍門浩老街",
                             opening: "全天開放",
-                            travelToNext: { dist: "2公里", time: "6分" }
+                            travelToNext: { dist: "2公里", time: "5分" }
                         },
-                        { 
-                            time: "晚餐", 
-                            title: "南濱路", 
-                            desc: "🥢 這裡號稱「重慶外灘」。推薦品嚐【南山泉水雞】，這是一道發源於南山的特色菜，麻辣鮮香。", 
+                        {
+                            time: "晚餐",
+                            title: "紅九格老火鍋",
+                            desc: "📍 江景火鍋花園(南濱路店)。🥢 坐在江邊吃火鍋，運氣好還能看到無人機表演。必點九宮格鍋底，感受正宗牛油香氣。",
                             type: "food", 
-                            emoji: "🍽️", 
+                            emoji: "🥘", 
                             location: "重慶南濱路",
-                            opening: "視各餐廳而定"
+                            opening: "10:00 - 02:00"
                         }
                     ]
                 },
@@ -877,6 +926,15 @@
                     {flightModalInfo && <FlightModal onClose={() => setFlightModalInfo(null)} location={flightModalInfo} />}
                     {showExchangeModal && <ExchangeModal onClose={() => setShowExchangeModal(false)} />}
                     {showHotelModal && <HotelModal onClose={() => setShowHotelModal(false)} />}
+                    {showNoteModal && (
+                        <NoteModal 
+                            onClose={() => setShowNoteModal(false)} 
+                            dayKey={activeTab} 
+                            dayLabel={itineraryData[activeTab].title}
+                            currentNote={notes[activeTab]}
+                            onSave={handleSaveNote}
+                        />
+                    )}
 
                     {/* Main Content Area */}
                     <div className="relative -mt-6 bg-rice-paper rounded-t-[2rem] z-30 min-h-[500px] shadow-[0_-8px_20px_-5px_rgba(0,0,0,0.2)]">
@@ -892,9 +950,27 @@
                                     </div>
                                 </div>
 
-                                <div className="px-6 py-5">
-                                    <h2 className="text-2xl font-bold text-stone-800 font-serif-tc tracking-wide">{itineraryData[activeTab].title}</h2>
-                                    <p className="text-stone-500 text-sm mt-1 font-serif-tc">{itineraryData[activeTab].subtitle}</p>
+                                <div className="px-6 py-5 relative">
+                                    {/* 新增：標題旁的筆記按鈕區域 */}
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-stone-800 font-serif-tc tracking-wide">{itineraryData[activeTab].title}</h2>
+                                            <p className="text-stone-500 text-sm mt-1 font-serif-tc">{itineraryData[activeTab].subtitle}</p>
+                                        </div>
+                                        <button 
+                                            onClick={() => setShowNoteModal(true)} 
+                                            className="group flex flex-col items-center justify-center p-2 rounded-lg hover:bg-stone-100 transition-colors relative"
+                                        >
+                                            <div className="bg-[#b45309]/10 p-2 rounded-full text-[#b45309] group-hover:scale-110 transition-transform">
+                                                <EditIcon size={20} />
+                                            </div>
+                                            <span className="text-[10px] text-[#b45309] mt-1 font-bold font-serif-tc">筆記</span>
+                                            {notes[activeTab] && (
+                                                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                                            )}
+                                        </button>
+                                    </div>
+
                                     <div className="mt-3 inline-flex items-center px-3 py-1 bg-red-50 text-red-800 rounded-sm border border-red-100 text-xs font-medium font-serif-tc">
                                         <AlertCircle size={12} className="mr-1.5" />
                                         精選：{itineraryData[activeTab].highlight}

@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>重慶魔幻山城之旅</title>
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="重慶之旅">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#7f1d1d">
+    
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3125/3125848.png">
+    <link rel="shortcut icon" href="https://cdn-icons-png.flaticon.com/512/3125/3125848.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 基礎設定 */
+        body { 
+            font-family: 'Noto Sans TC', sans-serif; 
+            -webkit-tap-highlight-color: transparent; 
+            overscroll-behavior-y: none;
+            background-color: #2c2c2c; 
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23444444' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .font-serif-tc { font-family: 'Noto Serif TC', serif; }
+        .font-calligraphy { font-family: 'Ma Shan Zheng', cursive; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .animate-fadeIn { animation: fadeIn 0.6s ease-out forwards; }
+        .animate-slideUp { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .animate-bounce-slight { animation: bounceSlight 2s infinite; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes bounceSlight { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(3px); } }
+
+        .bg-rice-paper {
+            background-color: #f9f7f2;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+        }
+
+        .bg-clouds {
+            background-color: #7f1d1d;
+            background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+    </style>
+</head>
+<body class="flex justify-center items-start min-h-screen">
+
+    <div id="root" class="w-full max-w-md bg-rice-paper min-h-screen shadow-2xl relative border-x border-gray-300">
+        <div class="flex items-center justify-center h-screen text-stone-600 font-serif-tc">
+            <div class="text-center">
+                <div class="text-3xl mb-2 font-calligraphy text-red-800">山城・重慶</div>
+                <div class="text-sm tracking-widest">載入中...</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- ICON 組件 ---
+        const IconBase = ({ children, className, size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>{children}</svg>
+        );
+        const MapPin = (props) => <IconBase {...props}><path d="M20 10c0 6-9 13-9 13s-9-7-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></IconBase>;
+        const Info = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></IconBase>;
+        const CalendarIcon = (props) => <IconBase {...props}><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></IconBase>;
+        const AlertCircle = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></IconBase>;
+        const XIcon = (props) => <IconBase {...props}><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></IconBase>;
+        const MapIcon = (props) => <IconBase {...props}><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon><line x1="8" y1="2" x2="8" y2="18"></line><line x1="16" y1="6" x2="16" y2="22"></line></IconBase>;
+        const Navigation = (props) => <IconBase {...props}><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></IconBase>;
+        const ChevronRight = (props) => <IconBase {...props}><polyline points="9 18 15 12 9 6"></polyline></IconBase>;
+        const Camera = (props) => <IconBase {...props}><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></IconBase>;
+        const Cloud = (props) => <IconBase {...props}><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></IconBase>;
+        const CloudRain = (props) => <IconBase {...props}><line x1="16" y1="13" x2="16" y2="21"></line><line x1="8" y1="13" x2="8" y2="21"></line><line x1="12" y1="15" x2="12" y2="23"></line><path d="M20 16.58A5 5 0 0 0 18 7h-1.26A8 8 0 1 0 4 15.25"></path></IconBase>;
+        const Sun = (props) => <IconBase {...props}><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></IconBase>;
+        const Umbrella = (props) => <IconBase {...props}><path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 7a3 3 0 0 1-6 0v-7"></path></IconBase>;
+        const Shirt = (props) => <IconBase {...props}><path d="M20.38 3.46L16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0 0 0-1.34-2.23z"></path></IconBase>;
+        const ExternalLink = (props) => <IconBase {...props}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></IconBase>;
+        const ClockIcon = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></IconBase>;
+        const LuggageIcon = (props) => <IconBase {...props}><rect x="6" y="8" width="12" height="12" rx="2" ry="2"></rect><path d="M8 8V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><circle cx="9" cy="15" r="1"></circle><circle cx="15" cy="15" r="1"></circle></IconBase>;
+        const HotelBedIcon = (props) => <IconBase {...props}><path d="M2 20v-8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v8"></path><path d="M4 10V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4"></path><path d="M12 4v6"></path><path d="M2 18h20"></path></IconBase>;
+        const CurrencyIcon = (props) => <IconBase {...props}><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><line x1="12" y1="18" x2="12" y2="22"></line><line x1="12" y1="2" x2="12" y2="6"></line></IconBase>;
+        const CarIcon = (props) => <IconBase {...props}><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><circle cx="17" cy="17" r="2"></circle></IconBase>;
+        const ArrowDown = (props) => <IconBase {...props}><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></IconBase>;
+        const PhoneIcon = (props) => <IconBase {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></IconBase>;
+        // 新增筆記 Icon
+        const EditIcon = (props) => <IconBase {...props}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></IconBase>;
+        const SaveIcon = (props) => <IconBase {...props}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></IconBase>;
+
+        const CutePlaneIcon = (props) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={props.size || 20} height={props.size || 20} viewBox="0 0 24 24" fill="currentColor" stroke="none" className={props.className} {...props}>
+                <path d="M21,16v-2l-8-5V3.5c0-0.83-0.67-1.5-1.5-1.5S10,2.67,10,3.5V9l-8,5v2l8-2.5V19l-2,1.5V22l3.5-1l3.5,1v-1.5L13,19v-5.5L21,16z"></path>
+            </svg>
+        );
+
+        // --- 航班資訊資料 ---
+        const flightDetailsKHH = {
+            city: "高雄 (KHH)",
+            outbound: {
+                date: "2026/03/03 (週二)",
+                legs: [
+                    { flight: "CX431", from: "高雄 KHH", to: "香港 HKG", dep: "11:25", arr: "13:10", terminal_d: "I", terminal_a: "T1" },
+                    { flight: "CX6130", from: "香港 HKG", to: "重慶 CKG", dep: "15:25", arr: "18:05", terminal_d: "T1", terminal_a: "T3" }
+                ],
+                transferTime: "2小時 15分",
+                checkInTime: "08:55", 
+            },
+            inbound: {
+                date: "2026/03/07 (週六)",
+                legs: [
+                    { flight: "CX929", from: "重慶 CKG", to: "香港 HKG", dep: "17:20", arr: "19:45", terminal_d: "T3", terminal_a: "T1" },
+                    { flight: "CX448", from: "香港 HKG", to: "高雄 KHH", dep: "21:50", arr: "23:15", terminal_d: "T1", terminal_a: "I" }
+                ],
+                transferTime: "2小時 05分",
+                checkInTime: "14:50",
+            }
+        };
+
+        const flightDetailsTPE = {
+            city: "台北 (TSA/TPE)",
+            outbound: {
+                date: "2026/03/03 (週二)",
+                legs: [
+                    { flight: "FM802", from: "台北 TSA", to: "上海 PVG", dep: "12:20", arr: "14:20", terminal_d: "T1", terminal_a: "T2" },
+                    { flight: "FM9549", from: "上海 PVG", to: "重慶 CKG", dep: "16:10", arr: "19:20", terminal_d: "T1", terminal_a: "T3" }
+                ],
+                transferTime: "1小時 50分",
+                checkInTime: "10:20", 
+            },
+            inbound: {
+                date: "2026/03/07 (週六)",
+                legs: [
+                    { flight: "CX929", from: "重慶 CKG", to: "香港 HKG", dep: "17:20", arr: "19:45", terminal_d: "T3", terminal_a: "T1" },
+                    { flight: "CX408", from: "香港 HKG", to: "台北 TPE", dep: "22:55", arr: "00:35(+1)", terminal_d: "T1", terminal_a: "T1" }
+                ],
+                transferTime: "3小時 10分",
+                checkInTime: "15:20", 
+            }
+        };
+
+        // --- 彈窗組件 ---
+        const FlightModal = ({ onClose, location }) => {
+            const data = location === 'TPE' ? flightDetailsTPE : flightDetailsKHH;
+            const themeColor = location === 'TPE' ? 'bg-indigo-800' : 'bg-slate-700';
+            const themeText = location === 'TPE' ? 'text-indigo-800' : 'text-slate-700';
+            const tripOrderLink = "https://www.trip.com/trips"; 
+
+            return (
+                <div className="fixed inset-0 bg-stone-900/70 z-50 flex items-center justify-center p-4 animate-fadeIn backdrop-blur-sm" onClick={onClose}>
+                    <div className="bg-[#f9f7f2] w-full max-w-sm rounded-xl overflow-hidden shadow-2xl animate-slideUp flex flex-col max-h-[85vh] border border-[#d6d3c9]" onClick={e => e.stopPropagation()}>
+                        
+                        <div className={`${themeColor} p-4 text-[#f9f7f2] flex justify-between items-center shrink-0 border-b-2 border-[#b45309]`}>
+                            <div className="flex items-center space-x-2">
+                                <CutePlaneIcon size={20} className="text-[#f9f7f2]" />
+                                <h2 className="font-serif-tc font-bold text-lg tracking-wider">航班資訊・{data.city}</h2>
+                            </div>
+                            <button onClick={onClose} className="p-1 hover:bg-white/10 rounded-full transition-colors"><XIcon size={20} /></button>
+                        </div>
+                        
+                        <div className="overflow-y-auto p-4 space-y-6 flex-1">
+                            {/* 去程 */}
+                            <div className="bg-white rounded-lg p-4 shadow-sm border border-[#e5e2d6] relative">
+                                <div className="absolute top-0 right-0 w-16 h-16 opacity-10 pointer-events-none">
+                                    <svg viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="40"/></svg>
+                                </div>
+                                <div className="flex justify-between items-center mb-3 pb-2 border-b border-dashed border-gray-200">
+                                    <span className={`${themeText} font-serif-tc font-bold flex items-center text-lg`}>
+                                        <span className={`${themeColor} text-white px-2 py-0.5 text-xs mr-2 rounded-sm`}>去程</span> 
+                                        {data.outbound.date}
+                                    </span>
+                                </div>
+                                
+                                <div className="flex items-start mb-3">
+                                    <div className="mr-3 mt-1 text-stone-400"><LuggageIcon size={16} /></div>
+                                    <div>
+                                        <div className="text-xs font-bold text-stone-500">建議 Check-in</div>
+                                        <div className={`text-xl ${themeText} font-bold font-serif-tc`}>{data.outbound.checkInTime}</div>
+                                        <div className="text-xs text-stone-400 font-serif-tc">{location === 'TPE' ? '台北松山 (TSA)' : '高雄小港 (KHH)'}</div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-0 relative">
+                                    {data.outbound.legs.map((leg, index) => (
+                                        <div key={index}>
+                                            <div className={`flex justify-between items-start relative z-10 bg-white ${index === 0 ? 'pb-3' : 'pt-1'}`}>
+                                                <div>
+                                                    <div className="text-lg font-bold text-stone-800 font-serif-tc">{leg.dep}</div>
+                                                    <div className="text-xs text-stone-500 font-medium bg-stone-100 px-1 rounded-sm inline-block">{leg.from.split(' ')[1]} {leg.terminal_d && `(${leg.terminal_d})`}</div>
+                                                </div>
+                                                <div className="flex-1 px-3 flex flex-col items-center mt-1">
+                                                    <div className="text-[10px] text-stone-400 mb-0.5 tracking-wider">{leg.flight}</div>
+                                                    <div className="w-full h-[1px] bg-stone-300 relative">
+                                                        <div className="absolute right-0 -top-[3px] w-1.5 h-1.5 rounded-full bg-stone-300"></div>
+                                                    </div>
+                                                    <div className="text-[10px] text-stone-400 mt-0.5">
+                                                        {location === 'TPE' ? (index === 0 ? '2h 00m' : '3h 10m') : (index === 0 ? '1h 45m' : '2h 40m')}
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-lg font-bold text-stone-800 font-serif-tc">{leg.arr}</div>
+                                                    <div className="text-xs text-stone-500 font-medium bg-stone-100 px-1 rounded-sm inline-block">{leg.to.split(' ')[1]} {leg.terminal_a && `(${leg.terminal_a})`}</div>
+                                                </div>
+                                            </div>
+                                            {index === 0 && data.outbound.legs.length > 1 && (
+                                                <div className="bg-amber-50 border border-amber-100 rounded-sm p-1.5 my-2 text-center relative z-10">
+                                                    <div className="text-xs text-amber-700 font-medium flex justify-center items-center font-serif-tc">
+                                                        <ClockIcon size={12} className="mr-1" />
+                                                        轉機等待：{data.outbound.transferTime}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* 回程 */}
+                            <div className="bg-white rounded-lg p-4 shadow-sm border border-[#e5e2d6]">
+                                 <div className="flex justify-between items-center mb-3 pb-2 border-b border-dashed border-gray-200">
+                                    <span className="text-emerald-800 font-serif-tc font-bold flex items-center text-lg">
+                                        <span className="bg-emerald-800 text-white px-2 py-0.5 text-xs mr-2 rounded-sm">回程</span> 
+                                        {data.inbound.date}
+                                    </span>
+                                </div>
+
+                                 <div className="flex items-start mb-3">
+                                    <div className="mr-3 mt-1 text-stone-400"><LuggageIcon size={16} /></div>
+                                    <div>
+                                        <div className="text-xs font-bold text-stone-500">建議抵達機場</div>
+                                        <div className="text-xl text-emerald-800 font-bold font-serif-tc">{data.inbound.checkInTime}</div>
+                                        <div className="text-xs text-stone-400 font-serif-tc">重慶江北機場 (CKG)</div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-0 relative">
+                                    {data.inbound.legs.map((leg, index) => (
+                                        <div key={index}>
+                                            <div className={`flex justify-between items-start relative z-10 bg-white ${index === 0 ? 'pb-3' : 'pt-1'}`}>
+                                                <div>
+                                                    <div className="text-lg font-bold text-stone-800 font-serif-tc">{leg.dep}</div>
+                                                    <div className="text-xs text-stone-500 font-medium bg-stone-100 px-1 rounded-sm inline-block">{leg.from.split(' ')[1]} {leg.terminal_d && `(${leg.terminal_d})`}</div>
+                                                </div>
+                                                <div className="flex-1 px-3 flex flex-col items-center mt-1">
+                                                    <div className="text-[10px] text-stone-400 mb-0.5 tracking-wider">{leg.flight}</div>
+                                                    <div className="w-full h-[1px] bg-stone-300 relative">
+                                                        <div className="absolute right-0 -top-[3px] w-1.5 h-1.5 rounded-full bg-stone-300"></div>
+                                                    </div>
+                                                    <div className="text-[10px] text-stone-400 mt-0.5">
+                                                        {location === 'TPE' ? (index === 0 ? '2h 25m' : '1h 40m') : (index === 0 ? '2h 25m' : '1h 25m')}
+                                                    </div>
+                                                </div>
+                                                <div className="text-right">
+                                                    <div className="text-lg font-bold text-stone-800 font-serif-tc">{leg.arr}</div>
+                                                    <div className="text-xs text-stone-500 font-medium bg-stone-100 px-1 rounded-sm inline-block">{leg.to.split(' ')[1]} {leg.terminal_a && `(${leg.terminal_a})`}</div>
+                                                </div>
+                                            </div>
+                                            {index === 0 && data.inbound.legs.length > 1 && (
+                                                <div className="bg-amber-50 border border-amber-100 rounded-sm p-1.5 my-2 text-center relative z-10">
+                                                    <div className="text-xs text-amber-700 font-medium flex justify-center items-center font-serif-tc">
+                                                        <ClockIcon size={12} className="mr-1" />
+                                                        轉機等待：{data.inbound.transferTime}
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="p-4 bg-[#f9f7f2] border-t border-[#d6d3c9] shrink-0 z-20">
+                            <a 
+                                href={tripOrderLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`w-full py-3 rounded-lg font-bold text-white flex items-center justify-center shadow-md transform transition-all active:scale-95 hover:brightness-110 ${themeColor}`}
+                            >
+                                <ExternalLink size={18} className="mr-2" />
+                                前往 Trip 查看訂單
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const ExchangeModal = ({ onClose }) => {
+            const [rmb, setRmb] = useState('');
+            const rate = 4.5; 
+
+            return (
+                <div className="fixed inset-0 bg-stone-900/70 z-50 flex items-center justify-center p-4 animate-fadeIn backdrop-blur-sm" onClick={onClose}>
+                    <div className="bg-[#f9f7f2] w-full max-w-xs rounded-xl p-6 shadow-2xl animate-slideUp text-center border border-[#d6d3c9]" onClick={e => e.stopPropagation()}>
+                        <div className="bg-yellow-600/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-yellow-700 border border-yellow-600/20">
+                            <div className="font-serif-tc font-bold text-2xl">¥</div>
+                        </div>
+                        <h3 className="text-xl font-bold text-stone-800 mb-6 font-serif-tc">匯率換算</h3>
+                        <div className="flex items-center space-x-2 mb-4 bg-white p-3 rounded-lg border border-stone-300">
+                            <span className="text-stone-500 font-serif-tc px-2 text-lg">人民幣</span>
+                            <input 
+                                type="number" 
+                                value={rmb} 
+                                onChange={e => setRmb(e.target.value)} 
+                                placeholder="輸入金額" 
+                                className="w-full bg-transparent outline-none text-2xl font-bold text-stone-800 text-right"
+                                autoFocus
+                            />
+                        </div>
+                        <div className="mb-6 py-4 border-t border-dashed border-stone-300">
+                            <div className="text-xs text-stone-500 mb-1">約等於新台幣 (x{rate})</div>
+                            <div className="text-4xl font-black text-stone-800 font-serif-tc tracking-tight">
+                                <span className="text-sm align-top mt-2 inline-block mr-1">NT$</span>
+                                {rmb ? Math.round(rmb * rate).toLocaleString() : '0'}
+                            </div>
+                        </div>
+                        <button onClick={onClose} className="w-full py-3 bg-stone-800 text-[#f9f7f2] rounded-lg font-medium font-serif-tc hover:bg-stone-900 transition-colors">關閉</button>
+                    </div>
+                </div>
+            );
+        };
+
+        const HotelModal = ({ onClose }) => (
+            <div className="fixed inset-0 bg-stone-900/70 z-50 flex items-center justify-center p-4 animate-fadeIn backdrop-blur-sm" onClick={onClose}>
+                <div className="bg-[#f9f7f2] w-full max-w-sm rounded-xl overflow-hidden shadow-2xl animate-slideUp flex flex-col max-h-[85vh] border border-[#d6d3c9]" onClick={e => e.stopPropagation()}>
+                     <div className="bg-[#1F2937] p-4 text-[#f9f7f2] flex justify-between items-center shrink-0 border-b-2 border-[#b45309]">
+                        <div className="flex items-center space-x-2">
+                            <HotelBedIcon size={20} className="text-[#f9f7f2]" />
+                            <h2 className="font-serif-tc font-bold text-lg tracking-wider">住宿資訊・嶼里</h2>
+                        </div>
+                        <button onClick={onClose} className="p-1 hover:bg-white/20 rounded-full transition-colors"><XIcon size={20} /></button>
+                    </div>
+                    
+                    <div className="p-6 overflow-y-auto flex-1">
+                        <div className="flex items-start space-x-3 mb-5">
+                            <div className="bg-stone-200 p-2.5 rounded-full text-stone-700 mt-1">
+                                <MapPin size={24} />
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-bold text-stone-800 leading-tight mb-1 font-serif-tc">嶼里民宿</h3>
+                                <div className="text-xs text-stone-600 font-medium bg-stone-200 px-2 py-1 rounded-sm inline-block">觀音橋步行街店</div>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-lg p-4 mb-6 border border-stone-200 shadow-sm">
+                            <div className="text-xs text-stone-400 mb-1 font-serif-tc">地址 Address</div>
+                            <div className="text-base font-medium text-stone-700 leading-relaxed font-serif-tc">
+                                重慶市江北區建新南路21號<br/>
+                                <span className="text-stone-500 text-sm">煌華晶萃城5棟</span>
+                            </div>
+                        </div>
+
+                        <div className="mb-6">
+                            <h4 className="text-sm font-bold text-stone-800 mb-3 flex items-center font-serif-tc">
+                                <span className="w-1 h-4 bg-[#b45309] rounded-full mr-2"></span>
+                                聯絡管家
+                            </h4>
+                            <div className="flex space-x-3">
+                                <a href="tel:+861992315xxxx" className="flex-1 bg-emerald-50 text-emerald-800 py-2.5 rounded-lg flex items-center justify-center font-bold text-sm border border-emerald-100">
+                                    <PhoneIcon size={16} className="mr-2" />
+                                    撥打電話
+                                </a>
+                                <div className="flex-1 bg-stone-50 text-stone-500 py-2.5 rounded-lg flex items-center justify-center text-xs border border-stone-100 text-center px-2">
+                                    請查看訂單獲取真實號碼
+                                </div>
+                            </div>
+                            <p className="text-[10px] text-stone-400 mt-2 text-center">入住當天請留意訂房平台訊息獲取密碼</p>
+                        </div>
+                         
+                        <div className="mb-6">
+                             <h4 className="text-sm font-bold text-stone-800 mb-3 flex items-center font-serif-tc">
+                                <span className="w-1 h-4 bg-[#b45309] rounded-full mr-2"></span>
+                                周邊推薦
+                            </h4>
+                            <div className="space-y-2">
+                                {[
+                                    { icon: "🍜", name: "觀音橋好吃街", desc: "必吃：烤豬蹄、降龍爪爪、酸辣粉。重慶美食密度最高處。", tag: "超近", tagColor: "text-[#b45309] bg-orange-50" },
+                                    { icon: "🎨", name: "北倉文創園", desc: "前身為江北紡織倉庫，現為文青拍照聖地。適合午後散步。", tag: "800m", tagColor: "text-stone-500" },
+                                    { icon: "🍸", name: "不夜九街", desc: "重慶夜生活地標。推薦酒吧：Play House。感受凌晨三點的熱鬧。", tag: "1.5km", tagColor: "text-stone-500" }
+                                ].map((item, idx) => (
+                                    <div key={idx} className="flex items-center justify-between p-3 bg-white rounded-lg border border-stone-100 shadow-sm">
+                                        <div className="flex items-center">
+                                            <div className="text-lg mr-3 opacity-80">{item.icon}</div>
+                                            <div className="flex-1 mr-2">
+                                                <div className="text-sm font-bold text-stone-700 font-serif-tc">{item.name}</div>
+                                                <div className="text-xs text-stone-400 leading-tight mt-0.5">{item.desc}</div>
+                                            </div>
+                                        </div>
+                                        <span className={`text-xs font-medium ${item.tagColor} px-2 py-1 rounded whitespace-nowrap`}>{item.tag}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-stone-200">
+                             <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("重庆市江北区建新南路21号")}`} target="_blank" className="flex items-center justify-center py-2.5 bg-[#b45309] text-white rounded-lg font-medium text-sm hover:bg-[#92400e] transition-colors shadow-sm">
+                                <MapPin size={16} className="mr-1.5" /> 開啟地圖
+                            </a>
+                            <button onClick={onClose} className="flex items-center justify-center py-2.5 bg-stone-100 text-stone-700 rounded-lg font-medium text-sm hover:bg-stone-200 transition-colors border border-stone-200">
+                                關閉
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+
+        // --- 新增：筆記彈窗組件 ---
+        const NoteModal = ({ onClose, dayKey, dayLabel, currentNote, onSave }) => {
+            const [text, setText] = useState(currentNote || '');
+
+            return (
+                <div className="fixed inset-0 bg-stone-900/70 z-50 flex items-center justify-center p-4 animate-fadeIn backdrop-blur-sm" onClick={onClose}>
+                    <div className="bg-[#f9f7f2] w-full max-w-sm rounded-xl p-6 shadow-2xl animate-slideUp border border-[#d6d3c9]" onClick={e => e.stopPropagation()}>
+                        <div className="flex justify-between items-center mb-4 pb-2 border-b border-[#b45309]/30">
+                            <h3 className="text-xl font-bold text-stone-800 font-serif-tc flex items-center">
+                                <EditIcon size={20} className="mr-2 text-[#b45309]" />
+                                {dayLabel} · 隨手筆記
+                            </h3>
+                            <button onClick={onClose} className="p-1 hover:bg-stone-200 rounded-full transition-colors"><XIcon size={20} className="text-stone-500" /></button>
+                        </div>
+                        
+                        <div className="mb-4">
+                            <textarea
+                                className="w-full h-48 p-4 bg-white border border-stone-300 rounded-lg text-stone-700 font-serif-tc text-base focus:outline-none focus:border-[#b45309] focus:ring-1 focus:ring-[#b45309] resize-none leading-relaxed"
+                                placeholder="寫下今日的心情、花費記錄、或是想對旅伴說的話..."
+                                value={text}
+                                onChange={(e) => setText(e.target.value)}
+                                autoFocus
+                            ></textarea>
+                            <div className="text-xs text-stone-400 mt-2 text-right">
+                                * 筆記將儲存於您的本機裝置
+                            </div>
+                        </div>
+
+                        <div className="flex space-x-3">
+                            <button onClick={onClose} className="flex-1 py-3 bg-stone-100 text-stone-600 rounded-lg font-medium font-serif-tc hover:bg-stone-200 transition-colors border border-stone-200">
+                                取消
+                            </button>
+                            <button onClick={() => { onSave(dayKey, text); onClose(); }} className="flex-1 py-3 bg-[#b45309] text-white rounded-lg font-bold font-serif-tc hover:bg-[#92400e] transition-colors shadow-sm flex items-center justify-center">
+                                <SaveIcon size={18} className="mr-2" />
+                                儲存筆記
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const ChongqingTripApp = () => {
+            const [activeTab, setActiveTab] = useState('day1');
+            const [view, setView] = useState('itinerary'); 
+            const [expandedMapIndex, setExpandedMapIndex] = useState(null);
+            const [flightModalInfo, setFlightModalInfo] = useState(null); 
+            const [showExchangeModal, setShowExchangeModal] = useState(false);
+            const [showHotelModal, setShowHotelModal] = useState(false);
+            
+            // --- 筆記相關狀態 ---
+            const [notes, setNotes] = useState({});
+            const [showNoteModal, setShowNoteModal] = useState(false);
+
+            // 初始化時讀取 LocalStorage
+            useEffect(() => {
+                const savedNotes = localStorage.getItem('chongqing_trip_notes');
+                if (savedNotes) {
+                    try {
+                        setNotes(JSON.parse(savedNotes));
+                    } catch (e) {
+                        console.error("Failed to parse notes", e);
+                    }
+                }
+            }, []);
+
+            // 儲存筆記
+            const handleSaveNote = (dayKey, text) => {
+                const newNotes = { ...notes, [dayKey]: text };
+                setNotes(newNotes);
+                localStorage.setItem('chongqing_trip_notes', JSON.stringify(newNotes));
+            };
+
+            const tripInfo = {
+                title: "重慶魔幻山城之旅",
+                date: "2026/03/03 (二) ～ 03/07 (六)", 
+                location: "嶼里民宿（重慶觀音橋步行街店）", 
+                tips: "重慶地形特殊，步行需穿舒適鞋履；D3建議包車。",
+            };
+
+            const weatherData = {
+                day1: { temp: "11-16°C", condition: "多雲時陰", icon: Cloud, tip: "微涼，舒適薄外套" },
+                day2: { temp: "12-17°C", condition: "陰轉小雨", icon: CloudRain, tip: "攜帶雨具，防滑鞋" },
+                day3: { temp: "10-15°C", condition: "小雨", icon: Umbrella, tip: "山區較涼，需保暖外套" },
+                day4: { temp: "11-18°C", condition: "多雲", icon: Sun, tip: "早晚溫差大，洋蔥式穿搭" },
+                day5: { temp: "13-19°C", condition: "晴時多雲", icon: Sun, tip: "舒適，適合逛街" }
+            };
+
+            // --- 深度導遊版行程資料 (加入歷史與菜單) ---
+            const itineraryData = {
+                day1: {
+                    date: "3/03 (二)",
+                    title: "初抵山城",
+                    subtitle: "抵達重慶 & 商圈初體驗",
+                    highlight: "觀音橋好吃街、九街夜生活",
+                    events: [
+                        { 
+                            time: "18:05", 
+                            title: "抵達重慶江北機場", 
+                            desc: "CX6130 抵達。入境T3航站/7號出口。💡打卡點：別忘了拍傳說中的「黃色法拉利」（重慶特有的黃色Suzuki計程車），這是山城獨有的風景線。", 
+                            emoji: "✈️", 
+                            location: "重慶江北國際機場T3航站樓",
+                            opening: "24小時開放",
+                            travelToNext: { dist: "23公里", time: "35分" }
+                        },
+                        { 
+                            time: "晚餐", 
+                            title: "觀音橋商圈", 
+                            desc: "📜 重慶最潮的商圈，美女密度最高。🥢 必吃推薦：【苕皮豆干】(軟糯Q彈)、【丁家酥肉】(現炸酥脆)、【劉酥肉】。若想吃正餐，推薦【挑挑肥腸】。", 
+                            type: "food", 
+                            emoji: "🌶️", 
+                            location: "重慶觀音橋步行街",
+                            opening: "步行街全天，好吃街 10:00-22:00",
+                            travelToNext: { dist: "1.2公里", time: "5分" }
+                        },
+                        { 
+                            time: "晚上", 
+                            title: "九街 (不夜九街)", 
+                            desc: "📜 這裡沒有歷史滄桑，只有年輕人的荷爾蒙。重慶的蘭桂坊。📸 適合街拍霓虹燈牆。推薦宵夜：【九村烤腦花】(口感像鵝肝，敢吃一定要試)。", 
+                            type: "activity", 
+                            emoji: "🍻", 
+                            location: "重慶九街",
+                            opening: "全天開放 (最佳體驗 19:00 後)"
+                        }
+                    ]
+                },
+                day2: {
+                    date: "3/04 (三)",
+                    title: "魔幻市區",
+                    subtitle: "山城步道 & 洪崖洞夜景",
+                    highlight: "18梯、解放碑、魔幻夜景動線",
+                    events: [
+                        { 
+                            time: "早餐", 
+                            title: "野水溝早市", 
+                            desc: "📜 最接地氣的菜市場。🥢 必吃：尋找市場裡的【老麵包子】和【油茶】(重慶特色早餐，米糊鋪上饊子)。", 
+                            type: "food", 
+                            emoji: "🍜", 
+                            location: "重慶野水溝",
+                            opening: "約 06:00 - 12:00",
+                            travelToNext: { dist: "7.5公里", time: "25分" }
+                        },
+                        { 
+                            time: "上午", 
+                            title: "山城步道 & 18梯", 
+                            desc: "📜 十八梯是昔日連接「上半城」(富人)與「下半城」(碼頭)的命脈，也是「棒棒軍」(挑夫)文化的發源地。從「佳實養老院入口」進入可拍到紅牆老房。", 
+                            type: "activity", 
+                            emoji: "🏮", 
+                            location: "重慶山城巷",
+                            opening: "全天開放 (店鋪約 09:00-21:00)",
+                            travelToNext: { dist: "2.5公里", time: "10分" }
+                        },
+                        { 
+                            time: "午餐", 
+                            title: "山城家常菜", 
+                            desc: "📍 渝中區五一路250號。🥢 菜單推薦：【虎皮肘子】(軟爛入味)、【蓮藕排骨湯】(解辣神器)、【肝腰合炒】(考驗火候的經典川菜)。", 
+                            type: "food", 
+                            emoji: "🍚", 
+                            location: "重慶渝中區五一路250號",
+                            opening: "10:00 - 22:00",
+                            travelToNext: { dist: "0.8公里", time: "5分" }
+                        },
+                        { 
+                            time: "下午", 
+                            title: "解放碑 & 魁星樓", 
+                            desc: "📜 解放碑全名「抗戰勝利紀功碑」，是二戰時中國唯一的精神堡壘，曾經是最高建築，現在被高樓環繞，見證時代變遷。隨後去魁星樓體驗「22樓是平地」的魔幻。", 
+                            type: "activity", 
+                            emoji: "🏙️", 
+                            location: "重慶解放碑步行街",
+                            opening: "全天開放",
+                            travelToNext: { dist: "1.0公里", time: "5分" }
+                        },
+                        { 
+                            time: "傍晚", 
+                            title: "魔幻夜景動線", 
+                            desc: "📜 洪崖洞重現了巴渝傳統「吊腳樓」建築，因酷似宮崎駿《神隱少女》湯屋而爆紅。📸 路線：洪崖洞(拍全景)→千廝門大橋→江北嘴(拍倒影)。", 
+                            type: "camera", 
+                            emoji: "📸", 
+                            isHighlight: true, 
+                            location: "重慶洪崖洞民俗風貌區",
+                            opening: "全天開放 (亮燈約 18:30-23:00)",
+                            travelToNext: { dist: "11公里", time: "30分" }
+                        },
+                        { 
+                            time: "晚餐", 
+                            title: "垭口老烧烤", 
+                            desc: "🥢 密子君推薦。這是一間開在山路邊的傳奇燒烤。推薦：【烤苕皮】(包酸蘿蔔)、【小肉串】、以及勇敢者必點的【包漿豆腐】。", 
+                            type: "food", 
+                            emoji: "🍢", 
+                            location: "重慶南山垭口",
+                            opening: "17:00 - 02:00"
+                        }
+                    ]
+                },
+                day3: {
+                    date: "3/05 (四)",
+                    title: "武隆仙境",
+                    subtitle: "天生三橋 & 苗族風情",
+                    highlight: "變形金剛取景地、九黎城",
+                    events: [
+                        { 
+                            time: "早晨", 
+                            title: "包車出發", 
+                            desc: "今日前往渝東南山區，路途遙遠(單程約3hr)，建議包車以保存體力。", 
+                            type: "transport", 
+                            emoji: "🚐", 
+                            location: "重慶觀音橋",
+                            travelToNext: { dist: "180公里", time: "2小時40分" }
+                        },
+                        { 
+                            time: "上午", 
+                            title: "武隆天生三橋", 
+                            desc: "📜 世界自然遺產「喀斯特地形」的代表。這裡是張藝謀《滿城盡帶黃金甲》唯一外景地，也是《變形金剛4》柯博文收服暴龍金剛的地方。記得抬頭看天龍橋的氣勢。", 
+                            type: "activity", 
+                            emoji: "🏔️", 
+                            isHighlight: true, 
+                            location: "重慶武隆天生三橋",
+                            opening: "08:30 - 16:30 (依季節微調)",
+                            travelToNext: { dist: "50公里", time: "50分" }
+                        },
+                        { 
+                            time: "途經", 
+                            title: "烏江畫廊", 
+                            desc: "📜 「千里烏江，百里畫廊」。碧綠江水兩岸是險峻的懸崖，古人云「蜀道難」在此可見一斑。", 
+                            type: "activity", 
+                            emoji: "🖼️", 
+                            location: "重慶烏江畫廊",
+                            opening: "全天開放",
+                            travelToNext: { dist: "5公里", time: "10分" }
+                        },
+                        { 
+                            time: "下午", 
+                            title: "蚩尤九黎城", 
+                            desc: "📜 苗族始祖「蚩尤」的主題景區。雖然是人造景點，但其依山而建的吊腳樓群非常壯觀，擁有世界最大的吊腳樓建築群。🥢 試試苗族特色【長桌宴】(視團體情況)。", 
+                            type: "activity", 
+                            emoji: "👹", 
+                            location: "重慶蚩尤九黎城",
+                            opening: "08:30 - 17:30",
+                            travelToNext: { dist: "135公里", time: "2小時10分" }
+                        },
+                        { 
+                            time: "傍晚", 
+                            title: "返回市區", 
+                            desc: "車程約 2 小時。可以在車上補眠。", 
+                            type: "transport", 
+                            emoji: "⏰", 
+                            location: "重慶市區",
+                            travelToNext: { dist: "5公里", time: "15分" }
+                        },
+                        { 
+                            time: "晚餐", 
+                            title: "秋香烤魚大排檔", 
+                            desc: "📍 融景城臻苑店。重慶萬州烤魚最為出名。🥢 必點：【蒜香/麻辣雙拼烤魚】，配菜加【魔芋】、【藕片】吸滿湯汁是精華。", 
+                            type: "food", 
+                            emoji: "🐟", 
+                            location: "重慶融景城臻苑",
+                            opening: "16:00 - 02:00"
+                        }
+                    ]
+                },
+                day4: {
+                    date: "3/06 (五)",
+                    title: "網紅打卡",
+                    subtitle: "穿樓輕軌 & 南濱夜景",
+                    highlight: "李子壩、下浩里、紅九格火鍋",
+                    events: [
+                        {
+                            time: "07:30",
+                            title: "汪家堡早市",
+                            desc: "📜 建議 07:00 抵達。最接地氣的本地菜市場，體驗重慶人的早晨。🥢 這裡有各種火鍋料、土雞、臘肉、新鮮水果，充滿煙火氣。",
+                            type: "activity",
+                            emoji: "🥬",
+                            location: "重慶汪家堡",
+                            opening: "05:00 - 12:00",
+                            travelToNext: { dist: "10公里", time: "25分" }
+                        },
+                        {
+                            time: "上午",
+                            title: "鵝嶺二廠",
+                            desc: "📜 電影《從你的全世界路過》取景地。前身是印製二廠，現在是工業風濃厚的文創園區，非常適合文青拍照。",
+                            type: "activity",
+                            emoji: "🏭",
+                            location: "重慶鵝嶺二廠文創公園",
+                            opening: "全天開放",
+                            travelToNext: { dist: "2公里", time: "5分" }
+                        },
+                        {
+                            time: "中午",
+                            title: "李子壩穿樓",
+                            desc: "📜 重慶最著名的名片之一。親眼見證輕軌2號線穿過居民樓的奇觀。📸 最佳拍攝點在樓下的觀景平台。",
+                            type: "camera",
+                            emoji: "🚈",
+                            location: "重慶李子壩輕軌站",
+                            opening: "全天開放",
+                            travelToNext: { dist: "8公里", time: "20分" }
+                        },
+                        {
+                            time: "下午",
+                            title: "下浩里老街",
+                            desc: "📜 靠近南山山腰，被稱為「重慶最後的老街」之一。保留了許多舊時光痕跡，視野開闊，可以拍到老街與現代建築同框的畫面。停留約30分鐘。",
+                            type: "activity",
+                            emoji: "🧱",
+                            location: "重慶下浩里",
+                            opening: "全天開放",
+                            travelToNext: { dist: "1公里", time: "5分" }
+                        },
+                        {
+                            time: "晚上",
+                            title: "龍門浩老街",
+                            desc: "📜 重慶開埠歷史的見證地，中西合璧的建築群。夜晚點燈後氣氛極佳，有很多精緻的咖啡廳與酒吧。停留約1小時。",
+                            type: "activity",
+                            emoji: "🏮",
+                            location: "重慶龍門浩老街",
+                            opening: "全天開放",
+                            travelToNext: { dist: "2公里", time: "5分" }
+                        },
+                        {
+                            time: "晚餐",
+                            title: "紅九格老火鍋",
+                            desc: "📍 江景火鍋花園(南濱路店)。🥢 坐在江邊吃火鍋，運氣好還能看到無人機表演。必點九宮格鍋底，感受正宗牛油香氣。",
+                            type: "food", 
+                            emoji: "🥘", 
+                            location: "重慶南濱路",
+                            opening: "10:00 - 02:00"
+                        }
+                    ]
+                },
+                day5: {
+                    date: "3/07 (六)",
+                    title: "告別重慶",
+                    subtitle: "光環購物 & 最後採買",
+                    highlight: "沐光森林、老火鍋",
+                    events: [
+                        { 
+                            time: "上午", 
+                            title: "光環購物公園", 
+                            desc: "📜 國內首個「城市自然共同體」商場。必看重點是室內植物園「沐光森林」，有高達42米的垂直景觀與瀑布，非常震撼。", 
+                            type: "activity", 
+                            emoji: "🌳", 
+                            location: "重慶光環購物公園",
+                            opening: "10:00 - 22:00",
+                            travelToNext: { dist: "0.5公里", time: "3分" }
+                        },
+                        { 
+                            time: "午餐", 
+                            title: "周媽老火鍋", 
+                            desc: "🥢 離開前的最後一頓正宗老火鍋。必點菜單：【鮮毛肚】(七上八下)、【九尺鵝腸】、【貢菜】(脆爽口感)、【紅糖糍粑】(解辣甜點)。", 
+                            type: "food", 
+                            emoji: "🍲", 
+                            location: "重慶周媽老火鍋",
+                            opening: "10:00 - 23:00",
+                            travelToNext: { dist: "0.2公里", time: "2分" }
+                        },
+                        { 
+                            time: "甜點", 
+                            title: "Crapes Cake", 
+                            desc: "🥢 網紅千層蛋糕店，口味多樣，適合買一塊作為飯後甜點，畫下完美句點。", 
+                            type: "food", 
+                            emoji: "🍰", 
+                            location: "重慶Crapes Cake",
+                            opening: "11:00 - 21:00",
+                            travelToNext: { dist: "18公里", time: "25分" }
+                        },
+                        { 
+                            time: "14:30", 
+                            title: "前往機場", 
+                            desc: "建議 14:30–15:00 出發。前往機場辦理登機。再見，山城！", 
+                            type: "transport", 
+                            emoji: "🚇", 
+                            location: "重慶江北國際機場" 
+                        },
+                        { 
+                            time: "17:20", 
+                            title: "班機起飛", 
+                            desc: "CX929 前往香港轉機。", 
+                            type: "transport", 
+                            emoji: "🛫", 
+                            location: "重慶江北國際機場T3" 
+                        }
+                    ]
+                }
+            };
+
+            const toggleMap = (index) => {
+                setExpandedMapIndex(expandedMapIndex === index ? null : index);
+            };
+
+            const openInfoLink = (title) => {
+                const query = encodeURIComponent(`重慶 ${title} 介紹`);
+                window.open(`https://www.google.com/search?q=${query}`, '_blank');
+            };
+
+            // 修改後的 DayButton：取消 .split(' ')[0] 以顯示完整日期(含星期)
+            const DayButton = ({ dayKey, label, date }) => (
+                <button
+                    onClick={() => { setActiveTab(dayKey); setView('itinerary'); setExpandedMapIndex(null); }}
+                    className={`flex-1 py-3 mx-0.5 rounded-lg flex flex-col items-center justify-center transition-all duration-300 min-w-0 border relative overflow-hidden ${
+                        activeTab === dayKey && view === 'itinerary'
+                            ? 'bg-[#8E0E00] text-[#f9f7f2] border-[#8E0E00] shadow-md transform scale-105 z-10' 
+                            : 'bg-white text-stone-500 border-stone-200'
+                    }`}
+                >
+                    {/* 印章紋理裝飾 */}
+                    {activeTab === dayKey && view === 'itinerary' && (
+                        <div className="absolute inset-0 opacity-10 border-2 border-white m-0.5 rounded-md pointer-events-none"></div>
+                    )}
+                    {/* 修改處：直接顯示 date (包含星期)，而非 split */}
+                    <span className="text-[10px] font-medium opacity-80 mb-0.5 font-serif-tc whitespace-nowrap">{date}</span>
+                    <span className="text-sm font-bold font-serif-tc whitespace-nowrap">{label}</span>
+                </button>
+            );
+
+            const WeatherCard = ({ dayData }) => {
+                const Icon = dayData.icon;
+                return (
+                    <div className="mx-5 mb-6 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-stone-200 flex items-center justify-between shadow-sm relative overflow-hidden group">
+                        {/* 水墨暈染背景 */}
+                        <div className="absolute -right-5 -top-5 w-24 h-24 bg-stone-200 rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
+                        
+                        <div className="flex items-center relative z-10">
+                            <div className="bg-white p-2.5 rounded-full shadow-sm mr-3 border border-stone-100 text-stone-600">
+                                <Icon size={24} />
+                            </div>
+                            <div>
+                                <div className="text-xs text-stone-500 font-medium font-serif-tc">每日天候</div>
+                                <div className="text-sm font-bold text-stone-800 font-serif-tc">{dayData.condition} <span className="text-stone-400">|</span> {dayData.temp}</div>
+                            </div>
+                        </div>
+                        <div className="text-right relative z-10">
+                            <div className="flex items-center justify-end text-xs text-[#b45309] font-medium mb-0.5 font-serif-tc">
+                                <Shirt size={12} className="mr-1" /> 穿搭建議
+                            </div>
+                            <div className="text-xs text-stone-600 font-serif-tc">{dayData.tip}</div>
+                        </div>
+                    </div>
+                );
+            };
+
+            return (
+                <div className="bg-rice-paper min-h-screen pb-20 relative animate-fadeIn overflow-hidden">
+                    {/* Cover Area (Chinese Style) */}
+                    <div className="relative h-72 overflow-hidden bg-clouds shadow-lg border-b-4 border-[#b45309]">
+                        {/* Overlay Gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
+                        
+                        {/* Title Section - Updated to prevent overlap & ADDED WEEKDAY */}
+                        <div className="absolute top-6 left-6 z-20 text-[#f9f7f2] w-full pr-16">
+                            <div className="flex items-center space-x-2 text-xs font-bold tracking-widest bg-black/30 backdrop-blur-md px-3 py-1 rounded-sm w-fit mb-3 border border-[#f9f7f2]/20 shadow-sm font-serif-tc">
+                                <span>伍天肆夜</span>
+                            </div>
+                            <h1 className="text-5xl tracking-wide drop-shadow-lg leading-tight font-calligraphy text-[#f9f7f2] mb-1">重慶</h1>
+                            
+                            <div className="flex flex-wrap items-end gap-3 mt-1">
+                                <h2 className="text-2xl font-serif-tc font-light tracking-[0.2em] opacity-90 leading-none">魔幻山城之旅</h2>
+                                <div className="flex items-center text-xs opacity-90 drop-shadow-sm font-serif-tc border-l border-white/40 pl-3 pb-0.5">
+                                    <CalendarIcon size={12} className="mr-1.5" />
+                                    {/* 修改處：加上星期顯示 */}
+                                    <span className="tracking-wide">2026/03/03 (二) - 07 (六)</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        {/* Info Toggle Button */}
+                        <button onClick={() => setView(view === 'info' ? 'itinerary' : 'info')} className="absolute top-6 right-6 z-20 bg-white/10 backdrop-blur-md p-2 rounded-full text-[#f9f7f2] hover:bg-white/20 transition-colors border border-white/20 shadow-sm">
+                            <Info size={20} />
+                        </button>
+
+                        {/* Bottom Icons Row */}
+                        <div className="absolute bottom-8 left-0 right-0 z-50 px-6">
+                            <div className="flex justify-between items-center gap-2">
+                                {/* Flight KHH */}
+                                <button onClick={() => setFlightModalInfo('KHH')} className="flex flex-col items-center group">
+                                    <div className="bg-stone-800/80 backdrop-blur-md p-3 rounded-xl border border-[#b45309]/50 shadow-lg group-hover:scale-110 transition-transform">
+                                        <CutePlaneIcon size={22} className="text-stone-200" />
+                                    </div>
+                                    <span className="text-[10px] text-white/80 mt-1 font-serif-tc shadow-black drop-shadow-md">高雄</span>
+                                </button>
+
+                                {/* Exchange Rate */}
+                                <button onClick={() => setShowExchangeModal(true)} className="flex flex-col items-center group">
+                                    <div className="bg-stone-800/80 backdrop-blur-md p-3 rounded-xl border border-[#b45309]/50 shadow-lg group-hover:scale-110 transition-transform">
+                                        <CurrencyIcon size={22} className="text-yellow-500" />
+                                    </div>
+                                    <span className="text-[10px] text-white/80 mt-1 font-serif-tc shadow-black drop-shadow-md">匯率</span>
+                                </button>
+
+                                {/* Hotel Info */}
+                                <button onClick={() => setShowHotelModal(true)} className="flex flex-col items-center group">
+                                    <div className="bg-stone-800/80 backdrop-blur-md p-3 rounded-xl border border-[#b45309]/50 shadow-lg group-hover:scale-110 transition-transform">
+                                        <HotelBedIcon size={22} className="text-emerald-400" />
+                                    </div>
+                                    <span className="text-[10px] text-white/80 mt-1 font-serif-tc shadow-black drop-shadow-md">住宿</span>
+                                </button>
+
+                                {/* Flight TPE */}
+                                <button onClick={() => setFlightModalInfo('TPE')} className="flex flex-col items-center group">
+                                    <div className="bg-stone-800/80 backdrop-blur-md p-3 rounded-xl border border-[#b45309]/50 shadow-lg group-hover:scale-110 transition-transform">
+                                        <CutePlaneIcon size={22} className="text-indigo-300" />
+                                    </div>
+                                    <span className="text-[10px] text-white/80 mt-1 font-serif-tc shadow-black drop-shadow-md">台北</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Modals */}
+                    {flightModalInfo && <FlightModal onClose={() => setFlightModalInfo(null)} location={flightModalInfo} />}
+                    {showExchangeModal && <ExchangeModal onClose={() => setShowExchangeModal(false)} />}
+                    {showHotelModal && <HotelModal onClose={() => setShowHotelModal(false)} />}
+                    {showNoteModal && (
+                        <NoteModal 
+                            onClose={() => setShowNoteModal(false)} 
+                            dayKey={activeTab} 
+                            dayLabel={itineraryData[activeTab].title}
+                            currentNote={notes[activeTab]}
+                            onSave={handleSaveNote}
+                        />
+                    )}
+
+                    {/* Main Content Area */}
+                    <div className="relative -mt-6 bg-rice-paper rounded-t-[2rem] z-30 min-h-[500px] shadow-[0_-8px_20px_-5px_rgba(0,0,0,0.2)]">
+                        
+                        {view === 'itinerary' ? (
+                            <>
+                                <div className="sticky top-0 bg-rice-paper/95 backdrop-blur-sm z-40 pt-5 pb-3 px-3 shadow-sm rounded-t-[2rem] border-b border-stone-200/50">
+                                    {/* Updated: Flex container for even distribution */}
+                                    <div className="flex justify-between items-stretch w-full">
+                                        {Object.keys(itineraryData).map((key, index) => (
+                                            <DayButton key={key} dayKey={key} label={`Day ${index + 1}`} date={itineraryData[key].date} />
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="px-6 py-5 relative">
+                                    {/* 新增：標題旁的筆記按鈕區域 */}
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <h2 className="text-2xl font-bold text-stone-800 font-serif-tc tracking-wide">{itineraryData[activeTab].title}</h2>
+                                            <p className="text-stone-500 text-sm mt-1 font-serif-tc">{itineraryData[activeTab].subtitle}</p>
+                                        </div>
+                                        <button 
+                                            onClick={() => setShowNoteModal(true)} 
+                                            className="group flex flex-col items-center justify-center p-2 rounded-lg hover:bg-stone-100 transition-colors relative"
+                                        >
+                                            <div className="bg-[#b45309]/10 p-2 rounded-full text-[#b45309] group-hover:scale-110 transition-transform">
+                                                <EditIcon size={20} />
+                                            </div>
+                                            <span className="text-[10px] text-[#b45309] mt-1 font-bold font-serif-tc">筆記</span>
+                                            {notes[activeTab] && (
+                                                <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                                            )}
+                                        </button>
+                                    </div>
+
+                                    <div className="mt-3 inline-flex items-center px-3 py-1 bg-red-50 text-red-800 rounded-sm border border-red-100 text-xs font-medium font-serif-tc">
+                                        <AlertCircle size={12} className="mr-1.5" />
+                                        精選：{itineraryData[activeTab].highlight}
+                                    </div>
+                                </div>
+
+                                <WeatherCard dayData={weatherData[activeTab]} />
+
+                                <div className="px-5 pb-8">
+                                    {/* Timeline Line */}
+                                    <div className="relative border-l-2 border-stone-300 ml-3 space-y-8">
+                                        {itineraryData[activeTab].events.map((event, idx) => (
+                                            <div key={idx} className="relative pl-8 group">
+                                                {/* Timeline Dot */}
+                                                <div className="absolute -left-[19px] top-0 w-10 h-10 rounded-full bg-[#f9f7f2] border-4 border-stone-200 shadow-sm flex items-center justify-center text-xl z-10 font-serif-tc">
+                                                    {event.emoji}
+                                                </div>
+                                                
+                                                <div className="bg-white rounded-lg p-4 shadow-sm border border-stone-200 hover:shadow-md hover:border-[#b45309]/30 transition-all relative overflow-hidden">
+                                                    {/* Card Decor */}
+                                                    <div className="absolute top-0 right-0 w-8 h-8 bg-stone-50 rounded-bl-xl z-0"></div>
+
+                                                    <div className="flex justify-between items-start mb-2 relative z-10">
+                                                        <span className={`text-xs font-bold px-2 py-0.5 rounded-sm font-serif-tc ${event.time.includes(':') ? 'bg-stone-100 text-stone-600' : 'bg-[#8E0E00] text-white'}`}>{event.time}</span>
+                                                        <div className="flex space-x-2">
+                                                            <button 
+                                                                onClick={(e) => { e.stopPropagation(); openInfoLink(event.title); }} 
+                                                                className="p-1.5 rounded-full bg-stone-100 text-stone-500 hover:bg-stone-200 transition-colors"
+                                                            >
+                                                                <ExternalLink size={14} />
+                                                            </button>
+
+                                                            <button onClick={() => toggleMap(idx)} className={`p-1.5 rounded-full transition-colors ${expandedMapIndex === idx ? 'bg-[#b45309] text-white' : 'bg-stone-100 text-stone-400 hover:bg-stone-200'}`}>
+                                                                {expandedMapIndex === idx ? <XIcon size={14} /> : <MapIcon size={14} />}
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <h3 className="text-lg font-bold text-stone-800 mb-1 font-serif-tc tracking-wide">{event.title}</h3>
+                                                    <p className="text-stone-600 text-sm leading-relaxed text-justify">{event.desc}</p>
+                                                    
+                                                    {event.opening && (
+                                                        <div className="mt-2 text-xs text-stone-500 font-medium bg-stone-50 px-2 py-1 rounded-sm w-fit flex items-center font-serif-tc border border-stone-100">
+                                                            <ClockIcon size={12} className="mr-1" />
+                                                            {event.opening}
+                                                        </div>
+                                                    )}
+
+                                                    {event.type === 'food' && <div className="mt-3 flex items-center text-xs text-[#b45309] font-medium font-serif-tc"><span className="mr-1 text-base">🥢</span> 尋味推薦</div>}
+
+                                                    {expandedMapIndex === idx && (
+                                                        <div className="mt-4 pt-4 border-t border-stone-100 animate-fadeIn">
+                                                            <div className="rounded-sm overflow-hidden border border-stone-300 h-48 bg-stone-100 relative shadow-inner">
+                                                                <iframe width="100%" height="100%" frameBorder="0" scrolling="no" marginHeight="0" marginWidth="0" src={`https://maps.google.com/maps?q=${encodeURIComponent(event.location)}&t=&z=13&ie=UTF8&iwloc=&output=embed`} title={`Map for ${event.title}`}></iframe>
+                                                            </div>
+                                                            <div className="mt-3 flex justify-between items-center">
+                                                                <div className="flex items-center text-xs text-stone-500 font-serif-tc"><MapPin size={12} className="mr-1" />{event.location}</div>
+                                                                <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(event.location)}`} target="_blank" className="flex items-center text-xs bg-[#b45309] text-white px-3 py-1.5 rounded-sm hover:bg-[#92400e] transition-colors font-serif-tc"><Navigation size={12} className="mr-1" />導航</a>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                </div>
+
+                                                {/* Travel Info (Connector to next) */}
+                                                {event.travelToNext && (
+                                                    <div className="mt-3 mb-6 relative pl-2"> 
+                                                        <div className="flex items-center bg-[#f9f7f2] rounded-lg p-2 pr-4 w-fit border border-stone-200 shadow-sm">
+                                                            <div className="bg-stone-200 p-1.5 rounded-full mr-2 text-stone-600">
+                                                                <CarIcon size={14} />
+                                                            </div>
+                                                            <div>
+                                                                <div className="text-[10px] text-stone-400 flex items-center mb-0.5 font-serif-tc">
+                                                                    下一站 <ArrowDown size={10} className="ml-1 animate-bounce-slight" />
+                                                                </div>
+                                                                <div className="text-xs font-bold text-stone-700 font-serif-tc">
+                                                                    {event.travelToNext.time} 
+                                                                    <span className="text-stone-400 font-normal ml-1">· {event.travelToNext.dist}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            <div className="p-6 animate-fadeIn">
+                                <h2 className="text-2xl font-bold text-stone-800 mb-6 font-serif-tc border-l-4 border-[#b45309] pl-3">行程筆記</h2>
+                                <div className="space-y-4">
+                                    <div className="bg-white p-5 rounded-xl shadow-sm border border-stone-200 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-20 h-20 bg-indigo-50 rounded-bl-[4rem] -mr-8 -mt-8 z-0"></div>
+                                        <div className="flex items-center space-x-3 mb-3 relative z-10">
+                                            <div className="bg-indigo-100 p-2 rounded-lg text-indigo-700"><MapPin size={20} /></div>
+                                            <h3 className="font-bold text-stone-800 font-serif-tc">住宿建議</h3>
+                                        </div>
+                                        <p className="text-stone-600 text-sm leading-relaxed relative z-10">{tripInfo.location}<br/><span className="text-xs text-stone-400">交通最方便，美食聚集地。</span></p>
+                                        <div className="mt-3 relative z-10">
+                                            <a href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("嶼里民宿(重庆观音桥步行街店)")}`} target="_blank" className="text-xs text-indigo-700 flex items-center font-medium font-serif-tc">查看區域地圖 <ChevronRight size={12} /></a>
+                                        </div>
+                                    </div>
+                                    
+                                    <div className="bg-white p-5 rounded-xl shadow-sm border border-stone-200 relative overflow-hidden">
+                                        <div className="absolute top-0 right-0 w-20 h-20 bg-amber-50 rounded-bl-[4rem] -mr-8 -mt-8 z-0"></div>
+                                        <div className="flex items-center space-x-3 mb-3 relative z-10">
+                                            <div className="bg-amber-100 p-2 rounded-lg text-amber-700"><AlertCircle size={20} /></div>
+                                            <h3 className="font-bold text-stone-800 font-serif-tc">重點提醒</h3>
+                                        </div>
+                                        <ul className="text-stone-600 text-sm space-y-2 list-disc list-inside relative z-10 font-serif-tc">
+                                            <li>重慶為「山城」，起伏大，務必穿著<strong>舒適好走的鞋</strong>。</li>
+                                            <li>Day 3 武隆較遠，<strong>包車</strong>最輕鬆。</li>
+                                            <li>重慶口味偏辣，腸胃藥備用。</li>
+                                            <li>導航在立體交通中易失靈，問路人最快。</li>
+                                        </ul>
+                                    </div>
+
+                                    <div className="bg-white p-5 rounded-xl shadow-sm border border-stone-200 relative overflow-hidden">
+                                        <div className="flex items-center space-x-3 mb-3">
+                                            <div className="bg-stone-200 p-2 rounded-lg text-stone-600"><Camera size={20} /></div>
+                                            <h3 className="font-bold text-stone-800 font-serif-tc">必拍打卡點</h3>
+                                        </div>
+                                        <div className="flex flex-wrap gap-2">
+                                            {['洪崖洞夜景', '黃色法拉利', '李子壩穿樓', '魁星樓天橋', '長江索道'].map(tag => (
+                                                <span key={tag} className="px-3 py-1 bg-stone-100 text-stone-600 text-xs rounded-full font-serif-tc border border-stone-200">#{tag}</span>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </div>
+                                <button onClick={() => setView('itinerary')} className="mt-8 w-full py-3 bg-[#2c2c2c] text-[#f9f7f2] rounded-lg font-medium font-serif-tc hover:bg-black transition-colors shadow-lg">返回行程表</button>
+                            </div>
+                        )}
+                    </div>
+                    
+                    {/* Floating Map Button */}
+                    <div className="fixed bottom-6 right-6 z-40">
+                        <button onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent("重慶市")}`, '_blank')} className="bg-[#b45309] text-white p-4 rounded-full shadow-xl shadow-orange-900/30 hover:scale-110 transition-transform flex items-center justify-center border-2 border-[#f9f7f2]">
+                            <MapPin size={24} />
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<ChongqingTripApp />);
+    </script>
+</body>
+</html>

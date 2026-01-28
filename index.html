@@ -41,6 +41,7 @@
         .animate-slideUp { animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         .animate-popIn { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
         .animate-bounce-slight { animation: bounceSlight 2s infinite; }
+        .animate-pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
         
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -99,6 +100,7 @@
         const PhoneIcon = (props) => <IconBase {...props}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></IconBase>;
         const EditIcon = (props) => <IconBase {...props}><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></IconBase>;
         const SaveIcon = (props) => <IconBase {...props}><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></IconBase>;
+        const RefreshIcon = (props) => <IconBase {...props}><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></IconBase>;
 
         // --- 新增可愛版圖示 ---
         const CutePlaneIcon = (props) => (
@@ -329,17 +331,22 @@
             );
         };
 
-        const ExchangeModal = ({ onClose }) => {
+        const ExchangeModal = ({ onClose, rate, lastUpdated }) => {
             const [rmb, setRmb] = useState('');
-            const rate = 4.5; 
-
+            
             return (
                 <div className="fixed inset-0 bg-stone-900/70 z-50 flex items-center justify-center p-4 animate-fadeIn backdrop-blur-sm" onClick={onClose}>
                     <div className="bg-[#f9f7f2] w-full max-w-xs rounded-xl p-6 shadow-2xl animate-slideUp text-center border border-[#d6d3c9]" onClick={e => e.stopPropagation()}>
                         <div className="bg-yellow-600/10 w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4 text-yellow-700 border border-yellow-600/20">
                             <div className="font-serif-tc font-bold text-2xl">¥</div>
                         </div>
-                        <h3 className="text-xl font-bold text-stone-800 mb-6 font-serif-tc">匯率換算</h3>
+                        <h3 className="text-xl font-bold text-stone-800 mb-2 font-serif-tc">匯率換算</h3>
+                        
+                        <div className="text-[10px] text-stone-400 mb-4 flex items-center justify-center">
+                            <div className={`w-1.5 h-1.5 rounded-full mr-1.5 ${lastUpdated ? 'bg-green-500 animate-pulse' : 'bg-stone-300'}`}></div>
+                            {lastUpdated ? '即時匯率' : '預設匯率'} (1 CNY ≈ {rate} TWD)
+                        </div>
+
                         <div className="flex items-center space-x-2 mb-4 bg-white p-3 rounded-lg border border-stone-300">
                             <span className="text-stone-500 font-serif-tc px-2 text-lg">人民幣</span>
                             <input 
@@ -352,10 +359,10 @@
                             />
                         </div>
                         <div className="mb-6 py-4 border-t border-dashed border-stone-300">
-                            <div className="text-xs text-stone-500 mb-1">約等於新台幣 (x{rate})</div>
+                            <div className="text-xs text-stone-500 mb-1">約等於新台幣</div>
                             <div className="text-4xl font-black text-stone-800 font-serif-tc tracking-tight">
                                 <span className="text-sm align-top mt-2 inline-block mr-1">NT$</span>
-                                {rmb ? Math.round(rmb * rate).toLocaleString() : '0'}
+                                {rmb ? (rmb * rate).toLocaleString(undefined, {maximumFractionDigits: 0}) : '0'}
                             </div>
                         </div>
                         <button onClick={onClose} className="w-full py-3 bg-stone-800 text-[#f9f7f2] rounded-lg font-medium font-serif-tc hover:bg-stone-900 transition-colors">關閉</button>
@@ -530,9 +537,24 @@
             const [flightModalInfo, setFlightModalInfo] = useState(null); 
             const [showExchangeModal, setShowExchangeModal] = useState(false);
             const [showHotelModal, setShowHotelModal] = useState(false);
-            
-            // 新增：目前聚焦放大的 Event 狀態
             const [focusedEvent, setFocusedEvent] = useState(null);
+            
+            // 即時資訊 State
+            const [exchangeRate, setExchangeRate] = useState(4.45); // 預設值
+            const [rateUpdated, setRateUpdated] = useState(false);
+
+            // Fetch Exchange Rate on Load
+            useEffect(() => {
+                fetch('https://api.exchangerate-api.com/v4/latest/CNY')
+                    .then(res => res.json())
+                    .then(data => {
+                        if(data && data.rates && data.rates.TWD) {
+                            setExchangeRate(data.rates.TWD);
+                            setRateUpdated(true);
+                        }
+                    })
+                    .catch(err => console.log("匯率抓取失敗，使用預設值"));
+            }, []);
 
             const tripInfo = {
                 title: "重慶魔幻山城之旅",
@@ -590,8 +612,8 @@
                 day2: {
                     date: "3/04 (三)",
                     title: "魔幻市區",
-                    subtitle: "山城步道 & 洪崖洞夜景",
-                    highlight: "18梯、解放碑、魔幻夜景動線",
+                    subtitle: "大轟炸遺址 & 洪崖洞夜景",
+                    highlight: "歷史遺跡、解放碑、魔幻夜景",
                     events: [
                         { 
                             time: "早餐", 
@@ -605,13 +627,13 @@
                         },
                         { 
                             time: "上午", 
-                            title: "山城步道 & 18梯", 
-                            desc: "📜 十八梯是昔日連接「上半城」(富人)與「下半城」(碼頭)的命脈，也是「棒棒軍」(挑夫)文化的發源地。從「佳實養老院入口」進入可拍到紅牆老房。", 
-                            type: "activity", 
-                            emoji: "🏮", 
-                            location: "重慶山城巷",
-                            opening: "全天開放 (店鋪約 09:00-21:00)",
-                            travelToNext: { dist: "2.5公里", time: "10分" }
+                            title: "重慶大轟炸遺址", 
+                            desc: "📜 銘記歷史。這裡是1941年「六五隧道慘案」的發生地，真實保留了當年的防空洞遺址。走入地下深處，感受山城人民在戰火中的堅韌與不屈。建議提前預約。", 
+                            type: "history", 
+                            emoji: "🕯️", 
+                            location: "渝中區磁器街 (較場口)",
+                            opening: "10:00 - 18:00 (週一閉館)",
+                            travelToNext: { dist: "0.7公里", time: "10分" }
                         },
                         { 
                             time: "午餐", 
@@ -646,12 +668,12 @@
                         },
                         { 
                             time: "晚餐", 
-                            title: "垭口老烧烤", 
-                            desc: "🥢 密子君推薦。這是一間開在山路邊的傳奇燒烤。推薦：【烤苕皮】(包酸蘿蔔)、【小肉串】、以及勇敢者必點的【包漿豆腐】。", 
+                            title: "北步園老火鍋", 
+                            desc: "🥢 被譽為「重慶人的後花園」的公園式老火鍋。總店依山而建，環境充滿老重慶的江湖氣息。特色是【蓋碗菜】，份量剛好，可以多點幾樣。必試：屠場鮮毛肚、雙椒牛肉。", 
                             type: "food", 
-                            emoji: "🍢", 
-                            location: "重慶南山垭口",
-                            opening: "17:00 - 02:00"
+                            emoji: "🍲", 
+                            location: "重慶市渝中區戴家巷28號",
+                            opening: "10:30 - 23:30"
                         }
                     ]
                 },
@@ -712,12 +734,12 @@
                         },
                         { 
                             time: "晚餐", 
-                            title: "秋香烤魚大排檔", 
-                            desc: "📍 融景城臻苑店。重慶萬州烤魚最為出名。🥢 必點：【蒜香/麻辣雙拼烤魚】，配菜加【魔芋】、【藕片】吸滿湯汁是精華。", 
+                            title: "垭口老燒烤 (五里店店)", 
+                            desc: "🥢 位於江北區五里店的熱門分店，離住宿點觀音橋不遠。不用上南山也能吃到正宗的【包漿豆腐】和【蒜爆五花肉】。適合武隆歸來後大口吃肉。", 
                             type: "food", 
-                            emoji: "🐟", 
-                            location: "重慶融景城臻苑",
-                            opening: "16:00 - 02:00"
+                            emoji: "🍢", 
+                            location: "重慶市江北區五里店",
+                            opening: "17:00 - 02:00"
                         }
                     ]
                 },
@@ -853,7 +875,6 @@
                 window.open(`https://www.google.com/search?q=${query}`, '_blank');
             };
 
-            // 修改後的 DayButton：取消 .split(' ')[0] 以顯示完整日期(含星期)
             const DayButton = ({ dayKey, label, date }) => (
                 <button
                     onClick={() => { setActiveTab(dayKey); setView('itinerary'); setExpandedMapIndex(null); }}
@@ -863,11 +884,9 @@
                             : 'bg-white text-stone-500 border-stone-200'
                     }`}
                 >
-                    {/* 印章紋理裝飾 */}
                     {activeTab === dayKey && view === 'itinerary' && (
                         <div className="absolute inset-0 opacity-10 border-2 border-white m-0.5 rounded-md pointer-events-none"></div>
                     )}
-                    {/* 修改處：直接顯示 date (包含星期)，而非 split */}
                     <span className="text-[10px] font-medium opacity-80 mb-0.5 font-serif-tc whitespace-nowrap">{date}</span>
                     <span className="text-sm font-bold font-serif-tc whitespace-nowrap">{label}</span>
                 </button>
@@ -877,7 +896,6 @@
                 const Icon = dayData.icon;
                 return (
                     <div className="mx-5 mb-6 bg-white/60 backdrop-blur-sm rounded-xl p-4 border border-stone-200 flex items-center justify-between shadow-sm relative overflow-hidden group">
-                        {/* 水墨暈染背景 */}
                         <div className="absolute -right-5 -top-5 w-24 h-24 bg-stone-200 rounded-full blur-2xl opacity-40 group-hover:opacity-60 transition-opacity"></div>
                         
                         <div className="flex items-center relative z-10">
@@ -885,14 +903,15 @@
                                 <Icon size={24} />
                             </div>
                             <div>
-                                <div className="text-xs text-stone-500 font-medium font-serif-tc">每日天候</div>
+                                <div className="text-xs text-stone-500 font-medium font-serif-tc">每日天候 (歷史均溫)</div>
                                 <div className="text-sm font-bold text-stone-800 font-serif-tc">{dayData.condition} <span className="text-stone-400">|</span> {dayData.temp}</div>
                             </div>
                         </div>
-                        <div className="text-right relative z-10">
-                            <div className="flex items-center justify-end text-xs text-[#b45309] font-medium mb-0.5 font-serif-tc">
-                                <Shirt size={12} className="mr-1" /> 穿搭建議
-                            </div>
+                        <div className="text-right relative z-10 flex flex-col items-end">
+                            <a href="https://www.qweather.com/weather/chongqing-101040100.html" target="_blank" className="flex items-center justify-end text-xs text-red-600 font-bold mb-1.5 font-serif-tc bg-red-50 px-2 py-1 rounded-full border border-red-100 animate-pulse-slow">
+                                <span className="w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5"></span>
+                                查看即時預報
+                            </a>
                             <div className="text-xs text-stone-600 font-serif-tc">{dayData.tip}</div>
                         </div>
                     </div>
@@ -903,10 +922,9 @@
                 <div className="bg-rice-paper min-h-screen pb-20 relative animate-fadeIn overflow-hidden">
                     {/* Cover Area (Chinese Style) */}
                     <div className="relative h-72 overflow-hidden bg-clouds shadow-lg border-b-4 border-[#b45309]">
-                        {/* Overlay Gradient */}
                         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60"></div>
                         
-                        {/* Title Section - Updated to prevent overlap & ADDED WEEKDAY */}
+                        {/* Title Section */}
                         <div className="absolute top-6 left-6 z-20 text-[#f9f7f2] w-full pr-16">
                             <div className="flex items-center space-x-2 text-xs font-bold tracking-widest bg-black/30 backdrop-blur-md px-3 py-1 rounded-sm w-fit mb-3 border border-[#f9f7f2]/20 shadow-sm font-serif-tc">
                                 <span>伍天肆夜</span>
@@ -917,7 +935,6 @@
                                 <h2 className="text-2xl font-serif-tc font-light tracking-[0.2em] opacity-90 leading-none">魔幻山城之旅</h2>
                                 <div className="flex items-center text-xs opacity-90 drop-shadow-sm font-serif-tc border-l border-white/40 pl-3 pb-0.5">
                                     <CalendarIcon size={12} className="mr-1.5" />
-                                    {/* 修改處：加上星期顯示 */}
                                     <span className="tracking-wide">2026/03/03 (二) - 07 (六)</span>
                                 </div>
                             </div>
@@ -941,8 +958,9 @@
 
                                 {/* Exchange Rate */}
                                 <button onClick={() => setShowExchangeModal(true)} className="flex flex-col items-center group">
-                                    <div className="bg-stone-800/80 backdrop-blur-md p-3 rounded-xl border border-[#b45309]/50 shadow-lg group-hover:scale-110 transition-transform">
+                                    <div className="bg-stone-800/80 backdrop-blur-md p-3 rounded-xl border border-[#b45309]/50 shadow-lg group-hover:scale-110 transition-transform relative">
                                         <CurrencyIcon size={22} className="text-yellow-500" />
+                                        {rateUpdated && <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-green-500 rounded-full border-2 border-stone-800"></div>}
                                     </div>
                                     <span className="text-[10px] text-white/80 mt-1 font-serif-tc shadow-black drop-shadow-md">匯率</span>
                                 </button>
@@ -968,10 +986,8 @@
 
                     {/* Modals */}
                     {flightModalInfo && <FlightModal onClose={() => setFlightModalInfo(null)} location={flightModalInfo} />}
-                    {showExchangeModal && <ExchangeModal onClose={() => setShowExchangeModal(false)} />}
+                    {showExchangeModal && <ExchangeModal onClose={() => setShowExchangeModal(false)} rate={exchangeRate} lastUpdated={rateUpdated} />}
                     {showHotelModal && <HotelModal onClose={() => setShowHotelModal(false)} />}
-                    
-                    {/* 新增：聚焦模式彈窗 */}
                     {focusedEvent && <EventDetailModal onClose={() => setFocusedEvent(null)} event={focusedEvent} />}
 
                     {/* Main Content Area */}
@@ -980,7 +996,6 @@
                         {view === 'itinerary' ? (
                             <>
                                 <div className="sticky top-0 bg-rice-paper/95 backdrop-blur-sm z-40 pt-5 pb-3 px-3 shadow-sm rounded-t-[2rem] border-b border-stone-200/50">
-                                    {/* Updated: Flex container for even distribution */}
                                     <div className="flex justify-between items-stretch w-full">
                                         {Object.keys(itineraryData).map((key, index) => (
                                             <DayButton key={key} dayKey={key} label={`Day ${index + 1}`} date={itineraryData[key].date} />
@@ -989,13 +1004,11 @@
                                 </div>
 
                                 <div className="px-6 py-5 relative">
-                                    {/* 新增：標題旁的筆記按鈕區域 */}
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <h2 className="text-2xl font-bold text-stone-800 font-serif-tc tracking-wide">{itineraryData[activeTab].title}</h2>
                                             <p className="text-stone-500 text-sm mt-1 font-serif-tc">{itineraryData[activeTab].subtitle}</p>
                                         </div>
-                                        {/* 修改處：Google Keep 按鈕 */}
                                         <button 
                                             onClick={() => window.open("https://keep.google.com/u/0/?ec=wgc-keep-[module]-goto#home", "_blank")}
                                             className="group flex flex-col items-center justify-center p-2 rounded-lg hover:bg-stone-100 transition-colors relative"
@@ -1016,23 +1029,19 @@
                                 <WeatherCard dayData={weatherData[activeTab]} />
 
                                 <div className="px-5 pb-8">
-                                    {/* Timeline Line */}
                                     <div className="relative border-l-2 border-stone-300 ml-3 space-y-8">
                                         {itineraryData[activeTab].events.map((event, idx) => (
                                             <div key={idx} className="relative pl-8 group">
-                                                {/* Timeline Dot */}
                                                 <div className="absolute -left-[19px] top-0 w-10 h-10 rounded-full bg-[#f9f7f2] border-4 border-stone-200 shadow-sm flex items-center justify-center text-xl z-10 font-serif-tc">
                                                     {event.emoji}
                                                 </div>
                                                 
                                                 <div className="bg-white rounded-lg p-4 shadow-sm border border-stone-200 hover:shadow-md hover:border-[#b45309]/30 transition-all relative overflow-hidden">
-                                                    {/* Card Decor */}
                                                     <div className="absolute top-0 right-0 w-8 h-8 bg-stone-50 rounded-bl-xl z-0"></div>
 
                                                     <div className="flex justify-between items-start mb-2 relative z-10">
                                                         <span className={`text-xs font-bold px-2 py-0.5 rounded-sm font-serif-tc ${event.time.includes(':') ? 'bg-stone-100 text-stone-600' : 'bg-[#8E0E00] text-white'}`}>{event.time}</span>
                                                         <div className="flex space-x-2">
-                                                            {/* 新增：放大聚焦按鈕 (置於最右邊) */}
                                                             <button 
                                                                 onClick={() => setFocusedEvent(event)} 
                                                                 className="p-1.5 rounded-full bg-stone-100 text-stone-500 hover:bg-[#8E0E00] hover:text-white transition-colors"
@@ -1080,7 +1089,6 @@
                                                     )}
                                                 </div>
 
-                                                {/* Travel Info (Connector to next) */}
                                                 {event.travelToNext && (
                                                     <div className="mt-3 mb-6 relative pl-2"> 
                                                         <div className="flex items-center bg-[#f9f7f2] rounded-lg p-2 pr-4 w-fit border border-stone-200 shadow-sm">
